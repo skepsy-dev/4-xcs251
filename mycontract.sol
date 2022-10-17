@@ -22,9 +22,9 @@ contract blockWise {
         }
     }
 
-    function remove(address _creditor,uint _iou) {
+    // function remove(address _creditor,uint _iou) {
         
-    }
+    // }
 
 
     function lookup(address _debtor, address _creditor) public view returns (uint) {

@@ -37,30 +37,6 @@ var abi = [
 		"inputs": [
 			{
 				"internalType": "address",
-				"name": "",
-				"type": "address"
-			},
-			{
-				"internalType": "address",
-				"name": "",
-				"type": "address"
-			}
-		],
-		"name": "ious",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
 				"name": "_debtor",
 				"type": "address"
 			},
@@ -87,7 +63,7 @@ var abi = [
 abiDecoder.addABI(abi);
 // call abiDecoder.decodeMethod to use this - see 'getAllFunctionCalls' for more
 
-var contractAddress = '0x9BcC7F769aa62320D2cf9D4F9B608345C535E0A5'; // FIXME: fill this in with your contract's address/hash
+var contractAddress = '0x18959f2807831025c1277a8b6e1edE0Ae939018e'; // FIXME: fill this in with your contract's address/hash
 var BlockchainSplitwise = new web3.eth.Contract(abi, contractAddress);
 
 // =============================================================================
@@ -154,16 +130,18 @@ async function getLastActive(user) {
 // The person you owe money is passed as 'creditor'
 // The amount you owe them is passed as 'amount'
 async function add_IOU(creditor, amount) {
+	
 	var cycle = doBFS(creditor, web3.eth.defaultAccount, getNeighbors)
+	console.log(cycle);
 
-	if (web3.eth.defaultAccount !== creditor) {
+	if (web3.eth.defaultAccount == creditor) {
 		await BlockchainSplitwise.methods.add_IOU(creditor, amount, []).send({from:web3.eth.defaultAccount})	
 		
-		if (!arr.includes(web3.eth.defaultAccount)) {
-			arr.push(web3.eth.defaultAccount)
+		if (!userArr.includes(web3.eth.defaultAccount)) {
+			userArr.push(web3.eth.defaultAccount)
 		}
-		if (!arr.includes(creditor)) {
-			arr.push(creditor)
+		if (!userArr.includes(creditor)) {
+			userArr.push(creditor)
 		} 
 
 	if (cycle !== null) {
@@ -171,9 +149,11 @@ async function add_IOU(creditor, amount) {
 		var cb = await BlockchainSplitwise.methods.lookup(cycle[1], cycle[2]).call();
 		var ca = await BlockchainSplitwise.methods.lookup(cycle[2], cycle[0]).call();
 		var iouCycle = Math.min(ab, cb, ca);
-		await BlockchainSplitwise.methods.add_IOU(creditor, iouCycle, path).send({from:web3.eth.defaultAccount})
+		await BlockchainSplitwise.methods.add_IOU(creditor, iouCycle, cycle).send({from:web3.eth.defaultAccount})
 
 	}
+	
+}
 }
 
 // =============================================================================
@@ -354,4 +334,4 @@ async function sanityCheck() {
 	console.log("Final Score: " + score +"/21");
 }
 
-// sanityCheck() //Uncomment this line to run the sanity check when you first open index.html
+sanityCheck() //Uncomment this line to run the sanity check when you first open index.html
