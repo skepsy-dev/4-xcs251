@@ -24,6 +24,23 @@ var BlockchainSplitwise = new web3.eth.Contract(abi, contractAddress);
 
 // TODO: Add any helper functions here!
 
+async function getNeighbors(user) {
+	neighbors = [];
+	users = getUsers();
+
+	// for each user in users if address has iou value push user to arr
+	for (let i = 0; i <= users.length; i++) {
+		var lookup = await BlockchainSplitwise.methods.lookup(user, users[i]).call()
+		if (lookup !== 0 && lookup !== null && lookup !== undefined) {
+			neighbors.push(users[i])
+		}
+	}
+
+	if (neighbors.length !== 0) return neighbors;
+
+	return null;
+}
+
 // TODO: Return a list of all users (creditors or debtors) in the system
 // You can return either:
 //   - a list of everyone who has ever sent or received an IOU
@@ -35,21 +52,42 @@ async function getUsers() {
 
 // TODO: Get the total amount owed by the user specified by 'user'
 async function getTotalOwed(user) {
+	var totalOwed = 0;
+	var neighbors = getNeighbors(user);
 
+	for (let i = 0; i <= neighbors.length; i++) {
+		var nLookup = await BlockchainSplitwise.methods.lookup(user, neighbors[i]).call()
+		if (nLookup !== undefined && nLookup !== null) {
+			totalOwed += nLookup;
+		}
+	}
+	return totalOwed;
 }
 
 // TODO: Get the last time this user has sent or received an IOU, in seconds since Jan. 1, 1970
 // Return null if you can't find any activity for the user.
 // HINT: Try looking at the way 'getAllFunctionCalls' is written. You can modify it if you'd like.
 async function getLastActive(user) {
+	var activity =  getAllFunctionCalls(contractAddress, add_IOU);
 
+	for (let i = 0; i <  activity.length; i++) {
+		let iou = activity[i];
+		console.log(iou);
+		console.log(iou.t);
+		if (iou.from == user) {
+			return iou.t;
+		} 
+	}
+	return null;
 }
 
 // TODO: add an IOU ('I owe you') to the system
 // The person you owe money is passed as 'creditor'
 // The amount you owe them is passed as 'amount'
 async function add_IOU(creditor, amount) {
+	var cyclexist = doBFS(start, end, getNeighbors(web3.eth.defaultAccount))
 
+	await BlockchainSplitwise.methods.add_IOU(creditor, amount, cyclexist).send({from:web3.eth.defaultAccount})	
 }
 
 // =============================================================================
