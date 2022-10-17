@@ -32,30 +32,6 @@
 				"inputs": [
 					{
 						"internalType": "address",
-						"name": "",
-						"type": "address"
-					},
-					{
-						"internalType": "address",
-						"name": "",
-						"type": "address"
-					}
-				],
-				"name": "ious",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "address",
 						"name": "_debtor",
 						"type": "address"
 					},
@@ -105,11 +81,11 @@
 	},
 	"sources": {
 		"mycontract.sol": {
-			"keccak256": "0x0300816de04ec237aed38d109e30754f77be4204ca9a06459b9cdf6344dff70c",
+			"keccak256": "0x6d2b4e64f82d75295e14631eaa441d3a8d8ed3dd23abb4d7d7faacbcabbe3209",
 			"license": "GPL-3.0",
 			"urls": [
-				"bzz-raw://3c723b233db5d8c6e344063ae6e69d12f408dcea83fb43d9ea94a9441a183bf1",
-				"dweb:/ipfs/QmS6dXT3a8vAX1vfqDLoMoxHy6hwvX1KsqqdXAamGtBDBE"
+				"bzz-raw://114eb4603f6fb96832a4d405af66f223c0dc16fd89386347356ebf82d73ded7a",
+				"dweb:/ipfs/QmNrEzYExt7zkBJygzWJkebgUFHZYVf9UWR4n9FEwm62CA"
 			]
 		}
 	},

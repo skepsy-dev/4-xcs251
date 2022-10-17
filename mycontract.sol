@@ -9,17 +9,23 @@ pragma experimental ABIEncoderV2;
 
 contract blockWise {
 
-    mapping(address => mapping(address => uint)) public ious;
+    mapping(address => mapping(address => uint)) private ious;
 
     function add_IOU(address _creditor, uint _iou, address[] memory cycle) public {
         if (cycle.length <= 0) {
             ious[msg.sender][_creditor] += _iou;
-        } else {
+        } 
+        if (cycle.length > 0) {
             ious[cycle[0]][cycle[1]] -= _iou;
             ious[cycle[1]][cycle[2]] -= _iou;
             ious[cycle[2]][cycle[0]] -= _iou;
         }
     }
+
+    function remove(address _creditor,uint _iou) {
+        
+    }
+
 
     function lookup(address _debtor, address _creditor) public view returns (uint) {
         return ious[_debtor][_creditor];
