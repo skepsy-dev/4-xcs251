@@ -11,19 +11,18 @@ contract blockWise {
 
     mapping(address => mapping(address => uint)) public ious;
 
-    function add_IOU(address _creditor, uint _iou, ??? cycleexist???) public {
-        
-        //  check if cycle exists if not add iou if yes remove ious from cycle
-        ious[msg.sender][_creditor] += _iou;
-    }
-
-    function remove_IOU(address _debtor, address _creditor, uint _iou) public {
-        ious[_debtor][_creditor] -= _iou;
+    function add_IOU(address _creditor, uint _iou, address[] memory cycle) public {
+        if (cycle.length <= 0) {
+            ious[msg.sender][_creditor] += _iou;
+        } else {
+            ious[cycle[0]][cycle[1]] -= _iou;
+            ious[cycle[1]][cycle[2]] -= _iou;
+            ious[cycle[2]][cycle[0]] -= _iou;
+        }
     }
 
     function lookup(address _debtor, address _creditor) public view returns (uint) {
         return ious[_debtor][_creditor];
     }
-
 
 }

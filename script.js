@@ -29,15 +29,13 @@ async function getNeighbors(user) {
 	users = getUsers();
 
 	// for each user in users if address has iou value push user to arr
-	for (let i = 0; i <= users.length; i++) {
+	for (let i = 0; i < users.length; i++) {
 		var lookup = await BlockchainSplitwise.methods.lookup(user, users[i]).call()
 		if (lookup !== 0 && lookup !== null && lookup !== undefined) {
 			neighbors.push(users[i])
 		}
 	}
-
 	if (neighbors.length !== 0) return neighbors;
-
 	return null;
 }
 
@@ -55,7 +53,7 @@ async function getTotalOwed(user) {
 	var totalOwed = 0;
 	var neighbors = getNeighbors(user);
 
-	for (let i = 0; i <= neighbors.length; i++) {
+	for (let i = 0; i < neighbors.length; i++) {
 		var nLookup = await BlockchainSplitwise.methods.lookup(user, neighbors[i]).call()
 		if (nLookup !== undefined && nLookup !== null) {
 			totalOwed += nLookup;
@@ -85,7 +83,12 @@ async function getLastActive(user) {
 // The person you owe money is passed as 'creditor'
 // The amount you owe them is passed as 'amount'
 async function add_IOU(creditor, amount) {
-	var cyclexist = doBFS(start, end, getNeighbors(web3.eth.defaultAccount))
+	var cyclexist = [];
+	var path = doBFS(creditor, web3.eth.defaultAccount, getNeighbors())
+
+	if (path !== null) {
+		cyclexist.push(path);
+	}
 
 	await BlockchainSplitwise.methods.add_IOU(creditor, amount, cyclexist).send({from:web3.eth.defaultAccount})	
 }

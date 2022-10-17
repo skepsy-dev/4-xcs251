@@ -1,0 +1,117 @@
+{
+	"compiler": {
+		"version": "0.8.7+commit.e28d00a7"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_creditor",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_iou",
+						"type": "uint256"
+					},
+					{
+						"internalType": "address[]",
+						"name": "cycle",
+						"type": "address[]"
+					}
+				],
+				"name": "add_IOU",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"name": "ious",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_debtor",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "_creditor",
+						"type": "address"
+					}
+				],
+				"name": "lookup",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"mycontract.sol": "blockWise"
+		},
+		"evmVersion": "london",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"mycontract.sol": {
+			"keccak256": "0xa496b4db71e4c646376840565c3f56476149766e52edf297cfbfbb11fe80ecf7",
+			"license": "GPL-3.0",
+			"urls": [
+				"bzz-raw://2bbd6dd02dbe09f7f450433c93432b0f0ffef8a634f0dfdbcaf88ec025ea71f7",
+				"dweb:/ipfs/QmfWSB7YfqnrgnK2oGEa5kzHS1z6nhPgrjEKKDWB8MxudY"
+			]
+		}
+	},
+	"version": 1
+}
