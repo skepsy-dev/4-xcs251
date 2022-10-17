@@ -32,11 +32,10 @@ async function getNeighbors(user) {
 	for (let i = 0; i < users.length; i++) {
 		var lookup = await BlockchainSplitwise.methods.lookup(user, users[i]).call()
 		if (lookup !== 0 && lookup !== null && lookup !== undefined) {
-			neighbors.push(users[i])
+			neighbors.push(users[i]);
 		}
 	}
-	if (neighbors.length !== 0) return neighbors;
-	return null;
+	return neighbors;	
 }
 
 // TODO: Return a list of all users (creditors or debtors) in the system
@@ -87,6 +86,7 @@ async function add_IOU(creditor, amount) {
 	var path = doBFS(creditor, web3.eth.defaultAccount, getNeighbors())
 
 	if (path !== null) {
+		// check if the amoun the 
 		cyclexist.push(path);
 	}
 
