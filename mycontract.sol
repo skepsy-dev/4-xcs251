@@ -11,7 +11,7 @@ contract blockWise {
 
     mapping(address => mapping(address => uint)) private ious;
 
-    function add_IOU(address _creditor, uint _iou, address[] memory cycle) public {
+    function add_IOU(address _creditor, uint _iou, address[] memory cycle) external {
         if (cycle.length <= 0) {
             ious[msg.sender][_creditor] += _iou;
         } 
@@ -27,7 +27,7 @@ contract blockWise {
     // }
 
 
-    function lookup(address _debtor, address _creditor) public view returns (uint) {
+    function lookup(address _debtor, address _creditor) external view returns (uint) {
         return ious[_debtor][_creditor];
     }
 
