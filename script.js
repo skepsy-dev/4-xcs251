@@ -68,7 +68,7 @@ var abi = [
 abiDecoder.addABI(abi);
 // call abiDecoder.decodeMethod to use this - see 'getAllFunctionCalls' for more
 
-var contractAddress = '0x3aEF072D9Af9b30d30617D0F8AC0e8A7F5294A60'; // FIXME: fill this in with your contract's address/hash
+var contractAddress = '0xe4306df279D4aFdD5D015a1D5ceBD6BD03539332'; // FIXME: fill this in with your contract's address/hash
 var BlockchainSplitwise = new web3.eth.Contract(abi, contractAddress);
 
 // =============================================================================
@@ -150,12 +150,10 @@ async function getLastActive(user) {
 async function add_IOU(creditor, amount) {
 
 	if (web3.eth.defaultAccount !== creditor) {
-		var cycle = doBFS(creditor, web3.eth.defaultAccount, getNeighbors());
+		var cycle = doBFS(creditor, web3.eth.defaultAccount, getNeighbors);
 		var cyclexist = false;
-		if (cycle !== null) {
+		if (cycle.length !== 0) {
 			cyclexist = true;
-		} else {
-			cycle = [];
 		}
 		await BlockchainSplitwise.methods.add_IOU(creditor, amount, cycle, cyclexist).send({from:web3.eth.defaultAccount});
 	}
@@ -220,7 +218,7 @@ async function doBFS(start, end, getNeighbors) {
 			}
 		}
 	}
-	return null;
+	return [];
 }
 
 // =============================================================================

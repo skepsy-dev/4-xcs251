@@ -17,14 +17,20 @@ contract blockWise {
         
        if (cyclexist != false) { 
             uint cycleAmount = 10000;
+            uint lastIndex = cycle.length-1;
+
             for (uint i = 0; i < cycle.length; i++) {
                 uint newAmount = ious[cycle[i]][cycle[i + 1]];
-                if (newAmount < cycleAmount) {
-                    cycleAmount = newAmount;
+                if (i != lastIndex) {
+                    if (newAmount < cycleAmount) {
+                        cycleAmount = newAmount;
+                    }
+                } else if (ious[cycle[i]][cycle[0]] < cycleAmount) {
+                    cycleAmount = ious[cycle[i]][cycle[0]];
                 }
-            }    
+            }
             for (uint i = 0; i < cycle.length; i++) {
-                uint lastIndex = cycle.length-1;
+               
                 if (i != lastIndex) {
                 ious[cycle[i]][cycle[i + 1]] -= cycleAmount;
                 } else {

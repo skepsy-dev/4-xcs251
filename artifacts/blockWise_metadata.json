@@ -86,11 +86,11 @@
 	},
 	"sources": {
 		"mycontract.sol": {
-			"keccak256": "0x7b72ec452e20128386b174a14f2eac5a0e3993df73273b7c1294b77cbb2ad2ae",
+			"keccak256": "0x2eac864a878218c17a6b044e9835bffee39d53b7e191b887701c62a3ee2f1345",
 			"license": "GPL-3.0",
 			"urls": [
-				"bzz-raw://9605656b9a516271bf0573694aa92bf8365e74ce796429e03ea2352a8a888e88",
-				"dweb:/ipfs/QmSKyM4B3hmMgrXJ9Y5UqjVrq9PXDdUTgpvzahKvh2KoCW"
+				"bzz-raw://3f62f5c74fa8aba37fcab1f340b2bba8b4782f52414319fc449702199ba17c33",
+				"dweb:/ipfs/QmWxDtdSor3Zor5o2TaXPPq6rtgDENcd1zkjY6FWHLUjLV"
 			]
 		}
 	},
