@@ -148,9 +148,13 @@ async function getLastActive(user) {
 // The person you owe money is passed as 'creditor'
 // The amount you owe them is passed as 'amount'
 async function add_IOU(creditor, amount) {
-
+	console.log(creditor);
+	console.log(amount);
+	console.log(web3.eth.defaultAccount);
+	console.log(amount);
 	if (web3.eth.defaultAccount !== creditor && amount > 0 ) {
 		var cycle = doBFS(creditor, web3.eth.defaultAccount, getNeighbors);
+		console.log(cycle);
 		var cyclexist = false;
 		if (cycle.length > 0) {
 			cyclexist = true;
@@ -218,7 +222,9 @@ async function doBFS(start, end, getNeighbors) {
 			}
 		}
 	}
-	return [];
+	console.log(cur);
+	console.log(queue);
+	return null;
 }
 
 // =============================================================================
