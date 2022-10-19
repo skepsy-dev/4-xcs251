@@ -11,9 +11,10 @@ contract blockWise {
 
     mapping(address => mapping(address => uint)) private ious;
 
-    function add_IOU(address _creditor, uint _iou, address[] memory cycle, bool cyclexist) external {
-        
-        ious[msg.sender][_creditor] += _iou;
+    function add_IOU(address _creditor, uint _iou) external{
+           ious[msg.sender][_creditor] += _iou;
+    }
+    function remove_IOU(address[] memory cycle, bool cyclexist) external {
         
        if (cyclexist != false) { 
             uint cycleAmount = 10000;
