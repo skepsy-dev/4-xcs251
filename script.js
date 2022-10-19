@@ -68,7 +68,7 @@ var abi = [
 abiDecoder.addABI(abi);
 // call abiDecoder.decodeMethod to use this - see 'getAllFunctionCalls' for more
 
-var contractAddress = '0x4Ae0D19D2BaFbc8c684448D6282E501B21546E34'; // FIXME: fill this in with your contract's address/hash
+var contractAddress = '0x3aEF072D9Af9b30d30617D0F8AC0e8A7F5294A60'; // FIXME: fill this in with your contract's address/hash
 var BlockchainSplitwise = new web3.eth.Contract(abi, contractAddress);
 
 // =============================================================================

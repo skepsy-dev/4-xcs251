@@ -15,7 +15,7 @@ contract blockWise {
         
         ious[msg.sender][_creditor] += _iou;
         
-       if (cyclexist == true) { 
+       if (cyclexist != false) { 
             uint cycleAmount = 10000;
             for (uint i = 0; i < cycle.length; i++) {
                 uint newAmount = ious[cycle[i]][cycle[i + 1]];
