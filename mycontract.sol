@@ -27,8 +27,10 @@ contract blockWise {
                     }
                 }
                 
-                if (ious[cycle[i]][cycle[0]] < cycleAmount) {
+                if (i == lastIndex) {
+                    if (ious[cycle[i]][cycle[0]] < cycleAmount) {
                     cycleAmount = ious[cycle[i]][cycle[0]];
+                    }
                 }
             }
             for (uint i = 0; i < cycle.length; i++) {
