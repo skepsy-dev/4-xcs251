@@ -137,7 +137,7 @@ async function getLastActive(user) {
 	for (let i = 0; i <  activity.length; i++) {
 		let iou = activity[i];
 		
-		if (iou.from == user) {
+		if ( user == iou.from || user == iou.args[0]) {
 			return iou.t;
 		} 
 	}
@@ -149,10 +149,10 @@ async function getLastActive(user) {
 // The amount you owe them is passed as 'amount'
 async function add_IOU(creditor, amount) {
 
-	if (web3.eth.defaultAccount !== creditor) {
+	if (web3.eth.defaultAccount !== creditor && amount > 0 ) {
 		var cycle = doBFS(creditor, web3.eth.defaultAccount, getNeighbors);
 		var cyclexist = false;
-		if (cycle.length !== 0) {
+		if (cycle.length > 0) {
 			cyclexist = true;
 		}
 		await BlockchainSplitwise.methods.add_IOU(creditor, amount, cycle, cyclexist).send({from:web3.eth.defaultAccount});
