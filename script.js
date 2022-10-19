@@ -21,6 +21,16 @@ var abi = [
 				"internalType": "uint256",
 				"name": "_iou",
 				"type": "uint256"
+			},
+			{
+				"internalType": "address[]",
+				"name": "cycle",
+				"type": "address[]"
+			},
+			{
+				"internalType": "bool",
+				"name": "cyclexist",
+				"type": "bool"
 			}
 		],
 		"name": "add_IOU",
@@ -51,24 +61,6 @@ var abi = [
 		],
 		"stateMutability": "view",
 		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address[]",
-				"name": "cycle",
-				"type": "address[]"
-			},
-			{
-				"internalType": "bool",
-				"name": "cyclexist",
-				"type": "bool"
-			}
-		],
-		"name": "remove_IOU",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
 	}
 ]; // FIXME: fill this in with your contract's ABI //Be sure to only have one array, not two
 
@@ -76,7 +68,7 @@ var abi = [
 abiDecoder.addABI(abi);
 // call abiDecoder.decodeMethod to use this - see 'getAllFunctionCalls' for more
 
-var contractAddress = '0xaf8cEd0Cc34a6007070C4e5f0A6870fd58fee1d4'; // FIXME: fill this in with your contract's address/hash
+var contractAddress = '0x3aEF072D9Af9b30d30617D0F8AC0e8A7F5294A60'; // FIXME: fill this in with your contract's address/hash
 var BlockchainSplitwise = new web3.eth.Contract(abi, contractAddress);
 
 // =============================================================================
@@ -156,16 +148,15 @@ async function getLastActive(user) {
 // The person you owe money is passed as 'creditor'
 // The amount you owe them is passed as 'amount'
 async function add_IOU(creditor, amount) {
-	var cycle = doBFS(creditor, web3.eth.defaultAccount, getNeighbors);
-	var cyclexist = false;
+
 	if (web3.eth.defaultAccount !== creditor) {
-		await BlockchainSplitwise.methods.add_IOU(creditor, amount).send({from:web3.eth.defaultAccount});
+		var cycle = doBFS(creditor, web3.eth.defaultAccount, getNeighbors());
+		var cyclexist = false;
 		if (cycle !== null) {
 			cyclexist = true;
-		await BlockchainSplitwise.methods.remove_IOU(cycle, cyclexist).send({from:web3.eth.defaultAccount});	
 		}
+		await BlockchainSplitwise.methods.add_IOU(creditor, amount, cycle, cyclexist).send({from:web3.eth.defaultAccount});
 	}
-	
 }
 	
 	
@@ -349,4 +340,4 @@ async function sanityCheck() {
 	console.log("Final Score: " + score +"/21");
 }
 
-// sanityCheck() //Uncomment this line to run the sanity check when you first open index.html
+sanityCheck() //Uncomment this line to run the sanity check when you first open index.html

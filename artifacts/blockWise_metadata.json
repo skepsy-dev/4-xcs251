@@ -16,6 +16,16 @@
 						"internalType": "uint256",
 						"name": "_iou",
 						"type": "uint256"
+					},
+					{
+						"internalType": "address[]",
+						"name": "cycle",
+						"type": "address[]"
+					},
+					{
+						"internalType": "bool",
+						"name": "cyclexist",
+						"type": "bool"
 					}
 				],
 				"name": "add_IOU",
@@ -45,24 +55,6 @@
 					}
 				],
 				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "address[]",
-						"name": "cycle",
-						"type": "address[]"
-					},
-					{
-						"internalType": "bool",
-						"name": "cyclexist",
-						"type": "bool"
-					}
-				],
-				"name": "remove_IOU",
-				"outputs": [],
-				"stateMutability": "nonpayable",
 				"type": "function"
 			}
 		],
@@ -94,11 +86,11 @@
 	},
 	"sources": {
 		"mycontract.sol": {
-			"keccak256": "0x97213515e73c77e4c4711ddd4e7a2c5b25d3f71f8a24c02f656a5a392b1aa2c6",
+			"keccak256": "0x7b72ec452e20128386b174a14f2eac5a0e3993df73273b7c1294b77cbb2ad2ae",
 			"license": "GPL-3.0",
 			"urls": [
-				"bzz-raw://95ee7529128676d129cd07325f584235521d3a0df0d081e62a88141c15cdc2f3",
-				"dweb:/ipfs/QmS8o3AiKjSVre7NHiY8m6HBvrHCdtdS99MhR3CsewQqaR"
+				"bzz-raw://9605656b9a516271bf0573694aa92bf8365e74ce796429e03ea2352a8a888e88",
+				"dweb:/ipfs/QmSKyM4B3hmMgrXJ9Y5UqjVrq9PXDdUTgpvzahKvh2KoCW"
 			]
 		}
 	},
