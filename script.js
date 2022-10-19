@@ -26,6 +26,11 @@ var abi = [
 				"internalType": "address[]",
 				"name": "cycle",
 				"type": "address[]"
+			},
+			{
+				"internalType": "bool",
+				"name": "cyclexist",
+				"type": "bool"
 			}
 		],
 		"name": "add_IOU",
@@ -63,7 +68,7 @@ var abi = [
 abiDecoder.addABI(abi);
 // call abiDecoder.decodeMethod to use this - see 'getAllFunctionCalls' for more
 
-var contractAddress = '0x18959f2807831025c1277a8b6e1edE0Ae939018e'; // FIXME: fill this in with your contract's address/hash
+var contractAddress = '0x4Ae0D19D2BaFbc8c684448D6282E501B21546E34'; // FIXME: fill this in with your contract's address/hash
 var BlockchainSplitwise = new web3.eth.Contract(abi, contractAddress);
 
 // =============================================================================
@@ -74,7 +79,7 @@ var BlockchainSplitwise = new web3.eth.Contract(abi, contractAddress);
 
 async function getNeighbors(user) {
 	neighbors = [];
-	users = userArr;
+	users = getUsers();
 
 	// for each user in users if address has iou value push user to arr
 	for (let i = 0; i < users.length; i++) {
@@ -85,13 +90,27 @@ async function getNeighbors(user) {
 	}
 	return neighbors;	
 }
-const userArr = [];
+
 // TODO: Return a list of all users (creditors or debtors) in the system
 // You can return either:
 //   - a list of everyone who has ever sent or received an IOU
 // OR
 //   - a list of everyone currently owing or being owed money
 async function getUsers() {
+	var userArr = [];
+
+	var activity =  getAllFunctionCalls(contractAddress, add_IOU);
+
+	for (let i = 0; i <  activity.length; i++) {
+		let tx = activity[i];
+
+		if (!userArr.includes(tx.from)) {
+			userArr.push(tx.from);
+		}
+		if (!userArr.includes(tx.args[0])) {
+			userArr.push(tx.args[0]);
+		}
+	}
 	return userArr;
 }
 
@@ -117,8 +136,7 @@ async function getLastActive(user) {
 
 	for (let i = 0; i <  activity.length; i++) {
 		let iou = activity[i];
-		console.log(iou);
-		console.log(iou.t);
+		
 		if (iou.from == user) {
 			return iou.t;
 		} 
@@ -130,31 +148,20 @@ async function getLastActive(user) {
 // The person you owe money is passed as 'creditor'
 // The amount you owe them is passed as 'amount'
 async function add_IOU(creditor, amount) {
-	
-	var cycle = doBFS(creditor, web3.eth.defaultAccount, getNeighbors)
-	console.log(cycle);
 
-	if (web3.eth.defaultAccount == creditor) {
-		await BlockchainSplitwise.methods.add_IOU(creditor, amount, []).send({from:web3.eth.defaultAccount})	
-		
-		if (!userArr.includes(web3.eth.defaultAccount)) {
-			userArr.push(web3.eth.defaultAccount)
+	if (web3.eth.defaultAccount !== creditor) {
+		var cycle = doBFS(creditor, web3.eth.defaultAccount, getNeighbors);
+		var cyclexist = false;
+		if (cycle !== null) {
+			cyclexist = true;
 		}
-		if (!userArr.includes(creditor)) {
-			userArr.push(creditor)
-		} 
-
-	if (cycle !== null) {
-		var ab = await BlockchainSplitwise.methods.lookup(cycle[0], cycle[1]).call();
-		var cb = await BlockchainSplitwise.methods.lookup(cycle[1], cycle[2]).call();
-		var ca = await BlockchainSplitwise.methods.lookup(cycle[2], cycle[0]).call();
-		var iouCycle = Math.min(ab, cb, ca);
-		await BlockchainSplitwise.methods.add_IOU(creditor, iouCycle, cycle).send({from:web3.eth.defaultAccount})
-
-	}
+		await BlockchainSplitwise.methods.add_IOU(creditor, amount, cycle, cyclexist).send({from:web3.eth.defaultAccount});
 	
+	}
 }
-}
+	
+	
+
 
 // =============================================================================
 //                              Provided Functions

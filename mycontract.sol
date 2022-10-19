@@ -11,20 +11,28 @@ contract blockWise {
 
     mapping(address => mapping(address => uint)) private ious;
 
-    function add_IOU(address _creditor, uint _iou, address[] memory cycle) external {
-        if (cycle.length <= 0) {
-            ious[msg.sender][_creditor] += _iou;
-        } 
-        if (cycle.length > 0) {
-            ious[cycle[0]][cycle[1]] -= _iou;
-            ious[cycle[1]][cycle[2]] -= _iou;
-            ious[cycle[2]][cycle[0]] -= _iou;
-        }
-    }
-
-    // function remove(address _creditor,uint _iou) {
+    function add_IOU(address _creditor, uint _iou, address[] memory cycle, bool cyclexist) external {
         
-    // }
+        ious[msg.sender][_creditor] += _iou;
+        
+       if (cyclexist == true) { 
+            uint cycleAmount = 10000;
+            for (uint i = 0; i < cycle.length; i++) {
+                uint newAmount = ious[cycle[i]][cycle[i + 1]];
+                if (newAmount < cycleAmount) {
+                    cycleAmount = newAmount;
+                }
+            }    
+            for (uint i = 0; i < cycle.length; i++) {
+                uint lastIndex = cycle.length-1;
+                if (i != lastIndex) {
+                ious[cycle[i]][cycle[i + 1]] -= cycleAmount;
+                } else {
+                    ious[cycle[i]][cycle[0]] -= cycleAmount;
+                }             
+            }
+        } 
+    }
 
 
     function lookup(address _debtor, address _creditor) external view returns (uint) {

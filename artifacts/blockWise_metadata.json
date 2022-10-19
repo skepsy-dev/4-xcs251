@@ -21,6 +21,11 @@
 						"internalType": "address[]",
 						"name": "cycle",
 						"type": "address[]"
+					},
+					{
+						"internalType": "bool",
+						"name": "cyclexist",
+						"type": "bool"
 					}
 				],
 				"name": "add_IOU",
@@ -81,11 +86,11 @@
 	},
 	"sources": {
 		"mycontract.sol": {
-			"keccak256": "0x99b224bd9d139e32d4529bcf540712e707e97be3852cb75d5e2d040efa28604e",
+			"keccak256": "0x5e8b343f2194c11795827ffeed5b849550234092c815dc14aa242d4e9a75a9bc",
 			"license": "GPL-3.0",
 			"urls": [
-				"bzz-raw://83b820d691f66ba220ef85a703c9faf8c0e427241138a841eb33a441a7a15124",
-				"dweb:/ipfs/Qma6PCC7dPjzrzwuAxhd6ipQGAwscAgqbyZbYHkuJb7g6M"
+				"bzz-raw://b4d680e751e198e0adcba6770f70feabb36c7d1a859ddf5197e22d7af20420f9",
+				"dweb:/ipfs/QmcSzR4YKDbK5J9NCNJoXRVyZBp7HkppMacJVyxLGTpXhs"
 			]
 		}
 	},
