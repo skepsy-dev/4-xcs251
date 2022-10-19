@@ -154,6 +154,8 @@ async function add_IOU(creditor, amount) {
 		var cyclexist = false;
 		if (cycle !== null) {
 			cyclexist = true;
+		} else {
+			cycle = [];
 		}
 		await BlockchainSplitwise.methods.add_IOU(creditor, amount, cycle, cyclexist).send({from:web3.eth.defaultAccount});
 	}
