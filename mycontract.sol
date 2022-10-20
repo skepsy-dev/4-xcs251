@@ -12,8 +12,10 @@ contract blockWise {
     mapping(address => mapping(address => uint)) private ious;
 
     function add_IOU(address _creditor, uint _iou) external {
-        
+       require(msg.sender != _creditor, "You can't owe money to yourself!");
+       
         ious[msg.sender][_creditor] += _iou;
+        
     }
 
 
