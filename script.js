@@ -58,7 +58,7 @@ var abi = [
 abiDecoder.addABI(abi);
 // call abiDecoder.decodeMethod to use this - see 'getAllFunctionCalls' for more
 
-var contractAddress = '0x1219ADc3Ca78309b096b7F04921a175F5Fc8A41B'; // FIXME: fill this in with your contract's address/hash
+var contractAddress = '0x355589C85a9fda1038f544B2cE91DB874dE377Df'; // FIXME: fill this in with your contract's address/hash
 var BlockchainSplitwise = new web3.eth.Contract(abi, contractAddress);
 
 // =============================================================================
@@ -96,41 +96,31 @@ async function getNeighbors(user) {
 //   - a list of everyone who has ever sent or received an IOU
 // OR
 //   - a list of everyone currently owing or being owed money
+const usersArr = [];
+
 async function getUsers() {
-	var userArr = [];
-	console.log(userArr);
-
-	var activity =  getAllFunctionCalls(contractAddress, add_IOU);
-	console.log(activity);
-
-	for (let i = 0; i <  activity.length; i++) {
-		let tx = activity[i];
-		console.log(tx);
-
-		if (!userArr.includes(tx.from)) {
-			userArr.push(tx.from);
-		}
-		if (!userArr.includes(tx.args[0])) {
-			userArr.push(tx.args[0]);
-		}
-	}
-	console.log(userArr);
-	return userArr;
+	
+	return usersArr;
 }
 
 // TODO: Get the total amount owed by the user specified by 'user'
 async function getTotalOwed(user) {
 	var totalOwed = 0;
-	var neighbors = getNeighbors(user);
-	console.log(neighbors);
+	var allUser = usersArr;
+	console.log(totalOwed);
 
-	for (let i = 0; i < neighbors.length; i++) {
-		var nLookup = await BlockchainSplitwise.methods.lookup(user, neighbors[i]).call()
-		console.log(nLookup);
-		if (nLookup !== undefined && nLookup !== null) {
+	for (let i = 0; i < allUser.length; i++) {
+		var address = allUser[i];
+		if (address == undefined) {
+			return 0;
+		} else {
+			var nLookup = await BlockchainSplitwise.methods.lookup(user, address).call({from:web3.eth.defaultAccount});
+			console.log(nLookup);
+		
 			totalOwed += nLookup;
 		}
 	}
+	console.log(totalOwed);
 	return totalOwed;
 }
 
@@ -138,18 +128,54 @@ async function getTotalOwed(user) {
 // Return null if you can't find any activity for the user.
 // HINT: Try looking at the way 'getAllFunctionCalls' is written. You can modify it if you'd like.
 async function getLastActive(user) {
-	var activity =  getAllFunctionCalls(contractAddress, add_IOU);
-	console.log(activity);
+	
+	var curBlock = await web3.eth.getBlockNumber();
+	var function_calls = [];
 
-	for (let i = 0; i <  activity.length; i++) {
-		let iou = activity[i];
-		console.log(iou);
-		if ( user == iou.from || user == iou.args[0]) {
-			return iou.t;
-		} 
+	while (curBlock !== GENESIS) {
+	  var b = await web3.eth.getBlock(curBlock, true);
+	  var txns = b.transactions;
+	  for (var j = 0; j < txns.length; j++) {
+	  	var txn = txns[j];
+
+	  	// check that destination of txn is our contract
+			if(txn.to == null){continue;}
+	  	if (txn.to.toLowerCase() === contractAddress.toLowerCase()) {
+	  		var func_call = abiDecoder.decodeMethod(txn.input);
+
+				// check that the function getting called in this txn is 'functionName'
+				if (func_call && func_call.name === add_IOU) {
+					var time = await web3.eth.getBlock(curBlock);
+					var args = func_call.params.map(function (x) {return x.value});
+					function_calls.push({
+							t: time.timestamp
+	  			})
+	  		}
+	  	}
+	  }
+	   curBlock = b.parentHash;
 	}
-	return null;
+	return function_calls[0];
 }
+	
+	
+	
+	
+	
+	
+	
+	// var activity =  getAllFunctionCalls(contractAddress, add_IOU);
+	// console.log(activity);
+
+	// for (let i = 0; i <  activity.length; i++) {
+	// 	let iou = activity[i];
+	// 	console.log(iou);
+	// 	if ( user == iou.from || user == iou.args[0]) {
+	// 		return iou.t;
+	// 	} 
+	// }
+	// return null;
+// }
 
 // TODO: add an IOU ('I owe you') to the system
 // The person you owe money is passed as 'creditor'
@@ -159,8 +185,11 @@ async function add_IOU(creditor, amount) {
 	console.log(amount);
 	console.log(web3.eth.defaultAccount);
 
+	
 	if (web3.eth.defaultAccount !== creditor) {
-		
+		usersArr.push(web3.defaultAccount);
+		usersArr.push(creditor);
+
 		await BlockchainSplitwise.methods.add_IOU(creditor, amount).send({from:web3.eth.defaultAccount});
 	}
 }
