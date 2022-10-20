@@ -13,11 +13,13 @@ contract blockWise {
 
 
     function add_IOU(address _creditor, uint _iou) external {
-       require(msg.sender != _creditor, "You can't owe money to yourself!");
+       if (msg.sender == _creditor) {
+
+       }
 
         ious[msg.sender][_creditor] += _iou;
         
-    }
+    } 
 
 
     function lookup(address _debtor, address _creditor) external view returns (uint) {

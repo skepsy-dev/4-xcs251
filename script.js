@@ -58,7 +58,7 @@ var abi = [
 abiDecoder.addABI(abi);
 // call abiDecoder.decodeMethod to use this - see 'getAllFunctionCalls' for more
 
-var contractAddress = '0x355589C85a9fda1038f544B2cE91DB874dE377Df'; // FIXME: fill this in with your contract's address/hash
+var contractAddress = '0x36e94E3887f30dfAD08BdBdD02b66ca8403859b7'; // FIXME: fill this in with your contract's address/hash
 var BlockchainSplitwise = new web3.eth.Contract(abi, contractAddress);
 
 // =============================================================================
@@ -111,13 +111,14 @@ async function getTotalOwed(user) {
 
 	for (let i = 0; i < allUser.length; i++) {
 		var address = allUser[i];
-		if (address == undefined) {
-			return 0;
-		} else {
-			var nLookup = await BlockchainSplitwise.methods.lookup(user, address).call({from:web3.eth.defaultAccount});
-			console.log(nLookup);
 		
-			totalOwed += nLookup;
+		if (address == undefined) {
+			totalOwed += 0;
+		} else {
+			var newLookup = await BlockchainSplitwise.methods.lookup(user, address).call({from:web3.eth.defaultAccount});
+			console.log(newLookup);
+			totalOwed += newLookup;
+			totalOwed -= 0;
 		}
 	}
 	console.log(totalOwed);
@@ -128,53 +129,44 @@ async function getTotalOwed(user) {
 // Return null if you can't find any activity for the user.
 // HINT: Try looking at the way 'getAllFunctionCalls' is written. You can modify it if you'd like.
 async function getLastActive(user) {
-	
-	var curBlock = await web3.eth.getBlockNumber();
-	var function_calls = [];
+	var activity =  getAllFunctionCalls(contractAddress, add_IOU);
+	console.log(activity);
 
-	while (curBlock !== GENESIS) {
-	  var b = await web3.eth.getBlock(curBlock, true);
-	  var txns = b.transactions;
-	  for (var j = 0; j < txns.length; j++) {
-	  	var txn = txns[j];
-
-	  	// check that destination of txn is our contract
-			if(txn.to == null){continue;}
-	  	if (txn.to.toLowerCase() === contractAddress.toLowerCase()) {
-	  		var func_call = abiDecoder.decodeMethod(txn.input);
-
-				// check that the function getting called in this txn is 'functionName'
-				if (func_call && func_call.name === add_IOU) {
-					var time = await web3.eth.getBlock(curBlock);
-					var args = func_call.params.map(function (x) {return x.value});
-					function_calls.push({
-							t: time.timestamp
-	  			})
-	  		}
-	  	}
-	  }
-	   curBlock = b.parentHash;
+	for (let i = 0; i <  activity.length; i++) {
+		let log = activity[i];
+		console.log(iou);
+		if ( user == log.from || user == log.args) {
+			return log.t;
+		} 
 	}
-	return function_calls[0];
+	return null;
 }
-	
-	
-	
-	
-	
-	
-	
-	// var activity =  getAllFunctionCalls(contractAddress, add_IOU);
-	// console.log(activity);
+// 	var curBlock = await web3.eth.getBlockNumber();
+// 	var function_calls = [];
 
-	// for (let i = 0; i <  activity.length; i++) {
-	// 	let iou = activity[i];
-	// 	console.log(iou);
-	// 	if ( user == iou.from || user == iou.args[0]) {
-	// 		return iou.t;
-	// 	} 
-	// }
-	// return null;
+// 	while (curBlock !== GENESIS) {
+// 		var b = await web3.eth.getBlock(curBlock, true);
+// 		var txns = b.transactions;
+// 		for (var j = 0; j < txns.length; j++) {
+// 	  	var txn = txns[j];
+
+// 	  		// check that destination of txn is our contract
+// 			if(txn.to == null){continue;}
+// 	  			if (txn.to.toLowerCase() === contractAddress.toLowerCase() && txn.from.toLowerCase() === user.toLowerCase()) {
+// 	  				var func_call = abiDecoder.decodeMethod(txn.input);
+
+// 					// check that the function getting called in this txn is 'functionName'
+// 					if (func_call && func_call.name === add_IOU) {
+// 						var time = await web3.eth.getBlock(curBlock);
+// 						return{t: time.timestamp};
+// 					} else {
+// 						return null;
+// 					}
+// 	  			}
+// 		}
+	  
+// 	   curBlock = b.parentHash;
+// 	}
 // }
 
 // TODO: add an IOU ('I owe you') to the system
@@ -193,9 +185,6 @@ async function add_IOU(creditor, amount) {
 		await BlockchainSplitwise.methods.add_IOU(creditor, amount).send({from:web3.eth.defaultAccount});
 	}
 }
-	
-	
-
 
 // =============================================================================
 //                              Provided Functions
@@ -207,7 +196,7 @@ async function add_IOU(creditor, amount) {
 async function getAllFunctionCalls(addressOfContract, functionName) {
 	var curBlock = await web3.eth.getBlockNumber();
 	var function_calls = [];
-
+	console.log(function_calls);
 	while (curBlock !== GENESIS) {
 	  var b = await web3.eth.getBlock(curBlock, true);
 	  var txns = b.transactions;
@@ -233,6 +222,7 @@ async function getAllFunctionCalls(addressOfContract, functionName) {
 	  }
 	  curBlock = b.parentHash;
 	}
+	console.log(function_calls);
 	return function_calls;
 }
 
