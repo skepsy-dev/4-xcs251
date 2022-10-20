@@ -159,7 +159,7 @@ async function add_IOU(creditor, amount) {
 	console.log(amount);
 	console.log(web3.eth.defaultAccount);
 
-	if (web3.eth.defaultAccount !== creditor && amount > 0 ) {
+	if (web3.eth.defaultAccount !== creditor) {
 		
 		await BlockchainSplitwise.methods.add_IOU(creditor, amount).send({from:web3.eth.defaultAccount});
 	}
