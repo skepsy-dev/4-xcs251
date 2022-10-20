@@ -21,6 +21,16 @@ var abi = [
 				"internalType": "uint256",
 				"name": "_iou",
 				"type": "uint256"
+			},
+			{
+				"internalType": "address[]",
+				"name": "cycle",
+				"type": "address[]"
+			},
+			{
+				"internalType": "bool",
+				"name": "cyclexist",
+				"type": "bool"
 			}
 		],
 		"name": "add_IOU",
@@ -58,7 +68,7 @@ var abi = [
 abiDecoder.addABI(abi);
 // call abiDecoder.decodeMethod to use this - see 'getAllFunctionCalls' for more
 
-var contractAddress = '0x311e18964642Df1410B4aD688b8d08441dB83953'; // FIXME: fill this in with your contract's address/hash
+var contractAddress = '0x3dD901b4792A8D1a56068C76c8596df85C295b5d'; // FIXME: fill this in with your contract's address/hash
 var BlockchainSplitwise = new web3.eth.Contract(abi, contractAddress);
 
 // =============================================================================
@@ -69,25 +79,17 @@ var BlockchainSplitwise = new web3.eth.Contract(abi, contractAddress);
 
 async function getNeighbors(user) {
 	neighbors = [];
-	console.log(neighbors);
+	users = getUsers();
+	console.log(getUsers);
 
-	var activity =  getAllFunctionCalls(contractAddress, add_IOU);
-	console.log(activity);
-
-	for (let i = 0; i <  activity.length; i++) {
-		let tx = activity[i];
-		console.log(tx);
-
-		if (tx.from == user && !neighbors.includes(tx.from)) {
-			neighbors.push(tx.args[0]);
-		} else if (tx.args[0] == user && !neighbors.includes(tx.args[0])) {
-			neighbors.push(tx.from);
+	// for each user in users if address has iou value push user to arr
+	for (let i = 0; i < users.length; i++) {
+		var lookup = await BlockchainSplitwise.methods.lookup(user, users[i]).call()
+		console.log(lookup);
+		if (lookup !== 0 && lookup !== null && lookup !== undefined) {
+			neighbors.push(users[i]);
 		}
-		
 	}
-
-
-	console.log(neighbors);
 	return neighbors;	
 }
 
@@ -114,7 +116,6 @@ async function getUsers() {
 			userArr.push(tx.args[0]);
 		}
 	}
-	console.log(userArr);
 	return userArr;
 }
 
@@ -143,7 +144,7 @@ async function getLastActive(user) {
 
 	for (let i = 0; i <  activity.length; i++) {
 		let iou = activity[i];
-		console.log(iou);
+		
 		if ( user == iou.from || user == iou.args[0]) {
 			return iou.t;
 		} 
@@ -158,10 +159,15 @@ async function add_IOU(creditor, amount) {
 	console.log(creditor);
 	console.log(amount);
 	console.log(web3.eth.defaultAccount);
-
+	console.log(amount);
 	if (web3.eth.defaultAccount !== creditor && amount > 0 ) {
-		
-		await BlockchainSplitwise.methods.add_IOU(creditor, amount).send({from:web3.eth.defaultAccount});
+		var cycle = doBFS(creditor, web3.eth.defaultAccount, getNeighbors);
+		console.log(cycle);
+		var cyclexist = false;
+		if (cycle.length > 0) {
+			cyclexist = true;
+		}
+		await BlockchainSplitwise.methods.add_IOU(creditor, amount, cycle, cyclexist).send({from:web3.eth.defaultAccount});
 	}
 }
 	

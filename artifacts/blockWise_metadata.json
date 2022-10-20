@@ -16,16 +16,6 @@
 						"internalType": "uint256",
 						"name": "_iou",
 						"type": "uint256"
-					},
-					{
-						"internalType": "address[]",
-						"name": "cycle",
-						"type": "address[]"
-					},
-					{
-						"internalType": "bool",
-						"name": "cyclexist",
-						"type": "bool"
 					}
 				],
 				"name": "add_IOU",
@@ -86,11 +76,11 @@
 	},
 	"sources": {
 		"mycontract.sol": {
-			"keccak256": "0xca92ed79cf0776f7fd05d1b55cffb7d4507d416f6902590be4df595129774c5f",
+			"keccak256": "0x14561f80b27454c9a522f7ae0adc1a0d11d7f7bcf75980d5003f4f98a2077527",
 			"license": "GPL-3.0",
 			"urls": [
-				"bzz-raw://8f107a533c3d2b91df61c45a9b5bfcd9b518549a7907367de48689e60ac097ba",
-				"dweb:/ipfs/QmTLSAjh4WNrTb1xEYuXdBhuY4vtTb6ABp5KURG4qZVSh9"
+				"bzz-raw://1c30863ba1ffb3304f547abcfb93260fb96d5aa6cbb14e89504b632ede0d16c2",
+				"dweb:/ipfs/QmZQ4q3bbFnY8EiLAUL9A5LL9msKMuCg5QTEywcZ3haJSZ"
 			]
 		}
 	},
