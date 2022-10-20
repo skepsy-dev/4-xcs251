@@ -14,7 +14,7 @@ contract blockWise {
 
     function add_IOU(address _creditor, uint _iou) external {
        if (msg.sender == _creditor) {
-
+           revert("You can't owe yourself monies!");
        }
 
         ious[msg.sender][_creditor] += _iou;

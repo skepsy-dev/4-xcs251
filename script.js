@@ -58,7 +58,7 @@ var abi = [
 abiDecoder.addABI(abi);
 // call abiDecoder.decodeMethod to use this - see 'getAllFunctionCalls' for more
 
-var contractAddress = '0xFa9dcb5D297e5c67A8cbbE2f6fB51B94be0D7f7e'; // FIXME: fill this in with your contract's address/hash
+var contractAddress = '0x0D846Af27429D8F1F793E6f828955aD41F0706Da'; // FIXME: fill this in with your contract's address/hash
 var BlockchainSplitwise = new web3.eth.Contract(abi, contractAddress);
 
 // =============================================================================
@@ -85,8 +85,6 @@ async function getNeighbors(user) {
 		}
 		
 	}
-
-
 	console.log(neighbors);
 	return neighbors;	
 }
